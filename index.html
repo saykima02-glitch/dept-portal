@@ -112,6 +112,47 @@
     background: linear-gradient(135deg, var(--blue), var(--sky));
     flex: none;
   }
+  .theme-toggle {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--blue-deep);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .back-to-top {
+    position: fixed;
+    right: 20px;
+    bottom: 24px;
+    z-index: 30;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 12px 28px -12px color-mix(in srgb, var(--blue-deep) 55%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
   nav.menu {
     display: flex;
     gap: 4px;
@@ -541,6 +582,7 @@
       <a href="#faq">FAQ</a>
       <a href="#resources">자료실</a>
     </nav>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="다크모드 전환" title="다크모드 전환">🌙</button>
   </div>
 </header>
 
@@ -710,8 +752,57 @@
   <div class="wrap">© 2026 Yujin Group. All rights reserved.</div>
 </footer>
 
+<button type="button" class="back-to-top" id="backToTop" aria-label="맨 위로" title="맨 위로">↑</button>
+
 <script>
   (function () {
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+      var root = document.documentElement;
+
+      function getStoredTheme() {
+        try { return localStorage.getItem('portal-theme'); } catch (e) { return null; }
+      }
+      function storeTheme(value) {
+        try { localStorage.setItem('portal-theme', value); } catch (e) { /* ignore */ }
+      }
+      function systemPrefersDark() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+      function isDark() {
+        var attr = root.getAttribute('data-theme');
+        if (attr === 'dark') return true;
+        if (attr === 'light') return false;
+        return systemPrefersDark();
+      }
+      function updateIcon() {
+        themeToggle.textContent = isDark() ? '☀️' : '🌙';
+      }
+
+      var saved = getStoredTheme();
+      if (saved === 'dark' || saved === 'light') {
+        root.setAttribute('data-theme', saved);
+      }
+      updateIcon();
+
+      themeToggle.addEventListener('click', function () {
+        var next = isDark() ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        storeTheme(next);
+        updateIcon();
+      });
+    }
+
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      window.addEventListener('scroll', function () {
+        backToTop.classList.toggle('visible', window.scrollY > 320);
+      });
+      backToTop.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
     var links = Array.prototype.slice.call(document.querySelectorAll('.menu a'));
     var sections = links.map(function (l) {
       return document.querySelector(l.getAttribute('href'));
