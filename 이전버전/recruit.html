@@ -1,0 +1,618 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>유진그룹 채용</title>
+<style>
+  /*
+    레이아웃 컨셉: 상단 고정 네비 + 섹션 단위 세로 스크롤.
+    각 섹션은 scroll-margin-top으로 고정 메뉴 높이만큼 여백을 두어
+    앵커 이동 시 제목이 가려지지 않도록 함.
+  */
+  :root {
+    --bg: #f5f9fd;
+    --surface: #ffffff;
+    --surface-2: #eaf4fc;
+    --ink: #0f2a43;
+    --ink-soft: #4b6b85;
+    --line: #d5e6f3;
+    --blue: #1d5fd1;
+    --blue-deep: #103f94;
+    --sky: #4fb6e8;
+    --sky-soft: #eaf7fd;
+    --font-display: 'Pretendard', 'Noto Sans KR', -apple-system, sans-serif;
+    --font-body: 'Pretendard', 'Noto Sans KR', -apple-system, sans-serif;
+    --nav-h: 64px;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b1726;
+      --surface: #11233a;
+      --surface-2: #122a44;
+      --ink: #eaf3fb;
+      --ink-soft: #9db6cc;
+      --line: #1e3a56;
+      --blue: #5b9bf0;
+      --blue-deep: #8fc1fb;
+      --sky: #5fc4ef;
+      --sky-soft: #142e46;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b1726;
+    --surface: #11233a;
+    --surface-2: #122a44;
+    --ink: #eaf3fb;
+    --ink-soft: #9db6cc;
+    --line: #1e3a56;
+    --blue: #5b9bf0;
+    --blue-deep: #8fc1fb;
+    --sky: #5fc4ef;
+    --sky-soft: #142e46;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    z-index: 30;
+    background: var(--surface);
+  }
+
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+
+  /* ---------- 고정 상단 네비 ---------- */
+  header.nav {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-h);
+    gap: 12px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--blue-deep);
+    white-space: nowrap;
+  }
+  .brand .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    flex: none;
+  }
+  nav.menu {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav.menu::-webkit-scrollbar { display: none; }
+  nav.menu a {
+    flex: none;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    padding: 8px 12px;
+    border-radius: 999px;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+  }
+  nav.menu a:hover, nav.menu a:focus-visible {
+    background: var(--sky-soft);
+    color: var(--blue-deep);
+    outline: none;
+  }
+  nav.menu a.active {
+    background: var(--blue);
+    color: #fff;
+  }
+
+  /* ---------- 섹션 공통 ---------- */
+  section {
+    padding-block: 56px;
+    scroll-margin-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 14px);
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--blue);
+    background: var(--sky-soft);
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .section-sub {
+    margin-top: 10px;
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 60ch;
+  }
+
+  /* ---------- 홈 (히어로) ---------- */
+  #home {
+    padding-top: 64px;
+    padding-bottom: 60px;
+    background:
+      radial-gradient(900px 400px at 85% -10%, color-mix(in srgb, var(--sky) 22%, transparent), transparent 70%),
+      var(--bg);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .hero-title {
+    font-size: clamp(30px, 5vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+  }
+  .hero-title .accent {
+    background: linear-gradient(90deg, var(--blue), var(--sky));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-desc {
+    margin-top: 16px;
+    color: var(--ink-soft);
+    font-size: 16px;
+    max-width: 48ch;
+  }
+  .hero-actions {
+    margin-top: 26px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14.5px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    color: #fff;
+    box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--blue) 55%, transparent);
+  }
+  .btn-ghost {
+    background: var(--surface);
+    color: var(--blue-deep);
+    border-color: var(--line);
+  }
+  .hero-stats {
+    margin-top: 32px;
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .stat .num {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--blue-deep);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .label { font-size: 13px; color: var(--ink-soft); }
+
+  .hero-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow: 0 18px 40px -24px color-mix(in srgb, var(--blue-deep) 30%, transparent);
+  }
+  .hero-card h3 { font-size: 16px; font-weight: 800; }
+  .hero-card .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 14px;
+  }
+  .hero-card .row:last-child { border-bottom: none; }
+  .hero-card .row b { color: var(--blue-deep); font-variant-numeric: tabular-nums; }
+
+  /* ---------- 채용 절차: 타임라인 ---------- */
+  .timeline {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    position: relative;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 23px;
+    left: 6%;
+    right: 6%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--sky));
+    opacity: .5;
+  }
+  .step {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 16px 18px;
+    min-width: 0;
+  }
+  .step .num-badge {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 14px;
+    font-variant-numeric: tabular-nums;
+    box-shadow: 0 0 0 4px var(--bg);
+  }
+  .step h4 { font-size: 15.5px; font-weight: 800; margin-bottom: 6px; }
+  .step p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+  .step .dur {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--blue);
+    background: var(--sky-soft);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+
+  /* ---------- 직무 소개 카드 ---------- */
+  .job-grid {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .job-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+  .job-card .icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    background: var(--sky-soft);
+    color: var(--blue-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px;
+  }
+  .job-card h4 { font-size: 17px; font-weight: 800; }
+  .job-card p { font-size: 13.5px; color: var(--ink-soft); margin: 0; flex: 1; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--blue-deep);
+    background: var(--sky-soft);
+    border-radius: 999px;
+    padding: 3px 9px;
+  }
+  .job-card .more {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue);
+    text-decoration: none;
+    margin-top: 4px;
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq-list {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  details.faq-item {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  details.faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  details.faq-item summary::-webkit-details-marker { display: none; }
+  details.faq-item summary .q-mark {
+    flex: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--sky-soft);
+    color: var(--blue-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    transition: transform .2s;
+  }
+  details.faq-item[open] summary .q-mark { transform: rotate(45deg); }
+  .faq-body {
+    padding: 0 18px 18px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- 자료실 ---------- */
+  #resources .panel {
+    margin-top: 32px;
+    background: var(--surface);
+    border: 1px dashed var(--line);
+    border-radius: 16px;
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+  #resources .panel .icon-big {
+    width: 48px; height: 48px;
+    margin: 0 auto 14px;
+    border-radius: 12px;
+    background: var(--sky-soft);
+    color: var(--blue-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  #resources .panel h4 { font-size: 15px; color: var(--ink); font-weight: 800; margin-bottom: 6px; }
+  #resources .panel p { font-size: 13px; max-width: 42ch; margin: 0 auto; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: 28px;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 760px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
+    .timeline::before { display: none; }
+    .job-grid { grid-template-columns: 1fr; }
+    .brand span.full { display: none; }
+  }
+</style>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand"><span class="dot"></span><span class="full">유진그룹</span> 채용</div>
+    <nav class="menu" id="menu">
+      <a href="#home" class="active">홈</a>
+      <a href="#process">채용 절차</a>
+      <a href="#jobs">직무 소개</a>
+      <a href="#faq">FAQ</a>
+      <a href="#resources">자료실</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="home">
+    <div class="wrap hero-grid">
+      <div>
+        <h1 class="hero-title">유진그룹의 미래를<br><span class="accent">함께 설계할 사람</span>을 찾습니다</h1>
+        <p class="hero-desc">유진그룹은 건설자재·금융투자·물류·미디어 등 다양한 사업을 영위하는 기업집단으로, IT 전략과 데이터 기술로 계열사의 성장을 함께 만들어갑니다.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#jobs">채용 공고 보기</a>
+          <a class="btn btn-ghost" href="#process">채용 절차</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="num">4</div><div class="label">전형 단계</div></div>
+          <div class="stat"><div class="num">3</div><div class="label">모집 직무</div></div>
+          <div class="stat"><div class="num">15+</div><div class="label">레저·골프 분야 경력</div></div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h3>이번 채용 한눈에 보기</h3>
+        <div class="row"><span>접수 기간</span><b>상시 접수</b></div>
+        <div class="row"><span>서류 발표</span><b>접수 후 1주 이내</b></div>
+        <div class="row"><span>근무 형태</span><b>정규직 / 수습 3개월</b></div>
+        <div class="row"><span>근무지</span><b>본사 및 사업장</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <span class="eyebrow">PROCESS</span>
+      <h2 class="section-title">채용 절차</h2>
+      <p class="section-sub">서류 접수부터 입사까지, 총 4단계로 진행됩니다. 각 단계 결과는 이메일과 문자로 안내드립니다.</p>
+      <div class="timeline">
+        <div class="step">
+          <div class="num-badge">1</div>
+          <h4>서류 전형</h4>
+          <p>이력서와 자기소개서를 바탕으로 직무 적합성을 검토합니다.</p>
+          <span class="dur">약 5영업일</span>
+        </div>
+        <div class="step">
+          <div class="num-badge">2</div>
+          <h4>실무 면접</h4>
+          <p>직무 전문성과 문제 해결 방식을 중심으로 대화를 나눕니다.</p>
+          <span class="dur">약 1주</span>
+        </div>
+        <div class="step">
+          <div class="num-badge">3</div>
+          <h4>임원 면접</h4>
+          <p>조직 적합성과 성장 방향에 대해 심도 있게 논의합니다.</p>
+          <span class="dur">약 1주</span>
+        </div>
+        <div class="step">
+          <div class="num-badge">4</div>
+          <h4>최종 합격 &amp; 입사</h4>
+          <p>처우 협의 후 입사일을 조율하고 온보딩을 시작합니다.</p>
+          <span class="dur">협의 후 확정</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="jobs" style="background: var(--surface-2);">
+    <div class="wrap">
+      <span class="eyebrow">POSITIONS</span>
+      <h2 class="section-title">직무 소개</h2>
+      <p class="section-sub">아래 세 분야를 중심으로 모집합니다. 직무별 상세 요건은 공고를 통해 확인해 주세요.</p>
+      <div class="job-grid">
+        <div class="job-card">
+          <div class="icon">💻</div>
+          <h4>IT 서비스 기획</h4>
+          <p>전사 ERP 및 운영 시스템의 요구사항을 분석하고, 현업과 개발팀을 잇는 서비스 기획을 담당합니다.</p>
+          <div class="tags"><span class="tag">Oracle EBS</span><span class="tag">업무 분석</span><span class="tag">PM</span></div>
+          <a class="more" href="#">상세 요건 보기 →</a>
+        </div>
+        <div class="job-card">
+          <div class="icon">🧠</div>
+          <h4>AI·데이터 개발</h4>
+          <p>골프 운영 데이터를 기반으로 AI 모델을 설계하고, 현장에 적용 가능한 서비스로 구현합니다.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">데이터 분석</span><span class="tag">AI 모델링</span></div>
+          <a class="more" href="#">상세 요건 보기 →</a>
+        </div>
+        <div class="job-card">
+          <div class="icon">📊</div>
+          <h4>사업관리</h4>
+          <p>그룹 계열사 전반을 관리하며, 경영진과 현장 사이의 의사결정을 지원합니다.</p>
+          <div class="tags"><span class="tag">경영 기획</span><span class="tag">사업 분석</span><span class="tag">성과 관리</span></div>
+          <a class="more" href="#">상세 요건 보기 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="section-title">자주 묻는 질문</h2>
+      <p class="section-sub">지원 전 궁금한 점을 먼저 확인해 보세요.</p>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>지원 서류는 어떻게 제출하나요?<span class="q-mark">+</span></summary>
+          <div class="faq-body">채용 공고 하단의 지원하기 버튼을 통해 이력서와 자기소개서를 온라인으로 제출하시면 됩니다. 이메일 접수는 별도 공지가 있는 경우에만 가능합니다.</div>
+        </details>
+        <details class="faq-item">
+          <summary>경력직과 신입 전형이 다른가요?<span class="q-mark">+</span></summary>
+          <div class="faq-body">기본적인 4단계 절차는 동일하며, 경력직의 경우 실무 면접에서 프로젝트 경험 중심의 질의가 추가될 수 있습니다.</div>
+        </details>
+        <details class="faq-item">
+          <summary>면접은 대면으로 진행되나요?<span class="q-mark">+</span></summary>
+          <div class="faq-body">실무 면접과 임원 면접 모두 원칙적으로 대면으로 진행되며, 지원자의 상황에 따라 화상 면접으로 조정될 수 있습니다.</div>
+        </details>
+        <details class="faq-item">
+          <summary>지원 결과는 어떻게 안내받나요?<span class="q-mark">+</span></summary>
+          <div class="faq-body">각 전형 단계별 결과는 지원 시 입력하신 이메일과 휴대폰 번호로 순차 안내드립니다.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="resources" style="background: var(--surface-2);">
+    <div class="wrap">
+      <span class="eyebrow">RESOURCES</span>
+      <h2 class="section-title">자료실</h2>
+      <p class="section-sub">회사 소개서, 직무 가이드 등 지원에 도움이 되는 자료를 제공할 예정입니다.</p>
+      <div class="panel">
+        <div class="icon-big">📁</div>
+        <h4>자료 준비 중입니다</h4>
+        <p>회사 소개 자료와 직무별 안내서가 이곳에 순차적으로 업데이트될 예정입니다.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Yujin Group. All rights reserved.</div>
+</footer>
+
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.menu a'));
+    var sections = links.map(function (l) {
+      return document.querySelector(l.getAttribute('href'));
+    });
+
+    links.forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        var target = document.querySelector(link.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var id = entry.target.id;
+          links.forEach(function (l) {
+            l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+          });
+        });
+      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+      sections.forEach(function (s) { if (s) obs.observe(s); });
+    }
+  })();
+</script>
